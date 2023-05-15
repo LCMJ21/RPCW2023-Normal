@@ -1,0 +1,37 @@
+extends ../layout
+
+block header
+    .w3-row
+        h1.w3-half #{title}
+        .w3-half.w3-right-align
+            a(href="/")
+                button.w3-btn.w3-large.w3-round-xlarge.w3-section.w3-lime Back
+
+block body_content
+    ul.w3-ul.w3-card-4
+        li NomeInstituicao: #{contract.NomeInstituicao}
+        li NIPCInstituicao: #{contract.NIPCInstituicao}
+        li NomeTitularContrato: #{contract.NomeTitularContrato}
+        li CienciaID: #{contract.CienciaID}
+        li ORCID: #{contract.ORCID}
+        li CienciaVitae: #{contract.CienciaVitae}
+        li Carreira_RPN: #{contract.Carreira_RPN}
+        li Categoria_RPN: #{contract.Categoria_RPN}
+        li Vinculo_RPN: #{contract.Vinculo_RPN}
+        li RegimePrestacaoServico: #{contract.RegimePrestacaoServico}
+        li DataInicioContrato: #{contract.DataInicioContrato}
+        li DataFimContrato: #{contract.DataFimContrato}
+        li ETIremunerado: #{contract.ETIremunerado}
+        li ProcedimentoVinculacao: #{contract.ProcedimentoVinculacao}
+        li AreasInvestigacao: #{contract.AreasInvestigacao}
+        li NivelFormação: #{contract.NivelFormação}
+        li InstituicaoEnsino: #{contract.InstituicaoEnsino}
+        li PaisInstituição: #{contract.PaisInstituição}
+        li AnoDiploma: #{contract.AnoDiploma}
+        li Curso: #{contract.Curso}
+        li AreaCNAEF: #{contract.AreaCNAEF}
+        li AreaFORD: #{contract.AreaFORD}
+        li ProvasAgregacao: #{contract.ProvasAgregacao}
+        li TituloEspecialista: #{contract.TituloEspecialista}
+        li ProvasCoordenacao: #{contract.ProvasCoordenacao}
+        li ProvasAptidao: #{contract.ProvasAptidao}

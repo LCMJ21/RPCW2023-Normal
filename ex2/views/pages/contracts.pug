@@ -1,0 +1,29 @@
+extends ../layout
+
+block header
+    .w3-row
+        h1.w3-half #{title}
+        h2.w3-half.w3-right-align #{contracts_list.length} contracts
+            if inst==true
+                a.w3-margin-left(href="/")
+                    button.w3-btn.w3-large.w3-round-xlarge.w3-section.w3-lime Back
+
+block body_content
+    table.w3-table-all
+        tr
+            th Id
+            th DataInicioContrato
+            th DataFimContrato
+            th NomeInstituicao
+            th AreasInvestigacao
+                
+        each contract in contracts_list
+            tr
+                td
+                    a(href="/" + contract._id) #{contract._id}
+                td #{contract.DataInicioContrato}
+                td #{contract.DataFimContrato}
+                td
+                    a(href="/inst/" + contract.NIPCInstituicao) #{contract.NomeInstituicao}
+                td #{contract.AreasInvestigacao}
+                
