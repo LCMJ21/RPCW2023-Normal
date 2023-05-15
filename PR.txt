@@ -198,3 +198,12 @@ Alerta :
     com a utilização de regex é permitido a procura de instituições com nomes parecidos, por exemplo:
     GET /contracts?inst=Universidade
     devolve a lista dos contratos realizados por instituições que contenham a palavra "Universidade" no nome.
+
+
+Pergunta 2
+
+Para a construção da Interface foi necessario adicionar a API uma nova rota:
+GET /contracts/inst/:nipc: devolve a lista dos contratos de uma instituição, identificada pelo seu nipc;
+
+Além disso utilizado apena um template para a exposição dos contratros, sendo esta a lista completa ou a lista de uma instutuição,
+fazendo o templete em pug de forma generica.
