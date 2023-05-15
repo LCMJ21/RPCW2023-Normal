@@ -182,3 +182,19 @@ Qual a distribuição dos contratos por instituição?
     ]
 
     Também esta divido por instituição e ordenado por número de contratos.
+
+Pergunta 1.3
+Para a construção da API de Dados foi:
+    Gerado a base do projeto com npx mas sem nenhuma view
+    Retirado coisas com o router dos users, ...
+    Trocar a porta da API de dados para 15015
+    Criado a conecção à base de dados scienceJobs
+    Criação dos models e controllers para os contratos
+    Criação das rotas para os contratos
+    Testes com o thunder client
+
+Alerta :
+    No endpoint GET /contracts?inst=AAA: devolve a lista dos contratos realizados pela instituição contratante AAA;
+    com a utilização de regex é permitido a procura de instituições com nomes parecidos, por exemplo:
+    GET /contracts?inst=Universidade
+    devolve a lista dos contratos realizados por instituições que contenham a palavra "Universidade" no nome.
