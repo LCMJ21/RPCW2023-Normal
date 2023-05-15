@@ -1,0 +1,184 @@
+Pergunta 1.1
+
+O datatset fornecido contém uma lista de empregos na área cientifica.
+Cada entrada contém os seguintes campos:
+    NomeInstituicao
+    NIPCInstituicao
+    NomeTitularContrato
+    CienciaID
+    ORCID
+    CienciaVitae
+    Carreira_RPN
+    Categoria_RPN
+    Vinculo_RPN
+    RegimePrestacaoServico
+    DataInicioContrato
+    DataFimContrato
+    ETIremunerado
+    ProcedimentoVinculacao
+    AreasInvestigacao
+    NivelFormação
+    InstituicaoEnsino
+    PaisInstituição
+    AnoDiploma
+    Curso
+    AreaCNAEF
+    AreaFORD
+    ProvasAgregacao
+    TituloEspecialista
+    ProvasCoordenacao
+    ProvasAptidao
+
+O dataset contém strings, inteiros e datas, mas nenhum objeto complexo (listas, dicionários, etc).
+Além disso apresenta sempre todos os campos, com valores nulos, quando a a ausencia de informação.
+Poderia ser adicionado um campo id como identificador único de cada entrada, mas o mongodb adiciona um campo _id automaticamente.
+
+Podemos usar o seguinte comando para importar o dataset para o mongodb:
+mongoimport -d scienceJobs -c contracts --file emprego-cientifico.json --jsonArray
+e obtemos o seguinte resultado:
+
+2023-05-15T09:22:23.942+0100    connected to: mongodb://localhost/
+2023-05-15T09:22:26.606+0100    17943 document(s) imported successfully. 0 document(s) failed to import.
+
+O que mostra que existem 17943 entradas no dataset e cada uma foi importada com sucesso.
+
+Para testar a importação podemos acedar à base de dados e verificar o número de entradas:
+mongosh
+use scienceJobs
+db.contracts.count()
+
+e obtemos o seguinte resultado:
+17943
+o que corresponde ao número de entradas importadas.
+
+db.foo.aggregate([{ $project: { DataInicioContrato: { "$DataInicioContrato": { $dateFromString: { dateString: "$time", format: "%d/%m/%Y" } } }}}])
+
+Pergunta 1.2
+
+Quantos contratos estão na base de dados;
+    Como já foi referido anteriormente, podemos aceder à base de dados e verificar o número de entradas com:
+
+    db.contracts.count()
+
+    e obtemos o seguinte resultado:
+    17943
+
+Quantos contratos foram realizados pela Universidade do Minho?
+    Assumindo que o campo NomeInstituicao corresponde ao nome da instituição que fez o contrato,
+    podemos usar o seguinte comando para obter o número de contratos realizados pela Universidade do Minho:
+
+    db.contracts.find({NomeInstituicao: "Universidade do Minho"}).count()
+
+    e obtemos o seguinte resultado:
+    166
+
+Qual a lista das áreas das pessoas contratadas (ordenada alfabeticamente e sem repetições)? (AreaCNAEF)
+    Podemos usar o seguinte comando para obter a lista das áreas das pessoas contratadas:
+
+    db.contracts.distinct("AreaCNAEF")
+
+    A resposta é uma lista de strings com as áreas das pessoas contratadas:
+
+    [
+        '',
+        'Agricultura sem definição precisa',
+        'Agricultura, silvicultura, pescas e ciências veterinárias sem definição precisa',
+        'Ambiente sem definição precisa',
+        'Ambientes naturais e vida selvagem',
+        'Aprendizagem de línguas',
+        'Arquitetura e construção sem definição precisa',
+        'Arquitetura e urbanismo',
+        'Artes e humanidades sem definição precisa',
+        'Artes sem definição precisa',
+        'Artesanato',
+        'Belas-artes',
+        'Biblioteconomia, arquivística e ciências da informação',
+        'Biologia',
+        'Bioquímica',
+        ...
+    ]
+
+    A lista está ordenada alfabeticamente e não contém repetições. Contém uma entrada vazia, que corresponde a contratos sem área definida.
+
+Qual a distribuição por ano dos contratos? (quantos contratos em cada ano)
+
+    Podemos usar o seguinte comando para obter a distribuição por ano dos contratos:
+    É necessario ter cuidado com a data pois  esta está em formato string:
+
+    db.contracts.aggregate([{$group: {_id: {$substr: ["$DataInicioContrato", 6, 4]},count: { $sum: 1 }}},{$sort: {count: -1}}])
+
+    e obtemos:
+
+    [
+        { _id: '2020', count: 6293 },
+        { _id: '2019', count: 5833 },
+        { _id: '2021', count: 2465 },
+        { _id: '2018', count: 2042 },
+        { _id: '2017', count: 1310 }
+    ]
+
+    A distribuição está ordenada por número de contratos.
+
+
+Qual a distribuição dos contratos por instituição?
+
+    Usamos o seguinte comando para obter a distribuição dos contratos por instituição:
+
+    db.contracts.aggregate([{$group: {_id: "$NomeInstituicao",count: { $sum: 1 }}},{$sort: {count: -1}}])
+
+    e obtemos o seguinte resultado:
+
+    [
+        { _id: 'Universidade de Aveiro', count: 1066 },
+        { _id: 'ISCTE - Instituto Universitário de Lisboa', count: 510 },
+        {
+            _id: 'Universidade de Coimbra - Faculdade de Ciências e Tecnologia',
+            count: 482
+        },
+        {
+            _id: 'Universidade do Porto - Faculdade de Engenharia',
+            count: 432
+        },
+        {
+            _id: 'Universidade Nova de Lisboa - Faculdade de Ciências Sociais e Humanas',
+            count: 421
+        },
+        {
+            _id: 'Universidade de Lisboa - Instituto Superior Técnico',
+            count: 366
+        },
+        {
+            _id: 'Universidade Nova de Lisboa - Faculdade de Ciências e Tecnologia',
+            count: 341
+        },
+        { _id: 'Universidade do Minho - Escola de Engenharia', count: 334 },
+        { _id: 'Universidade de Lisboa - Faculdade de Ciências', count: 328 },
+        { _id: 'Universidade do Porto - Faculdade de Ciências', count: 313 },
+        { _id: 'Universidade de Trás-os-Montes e Alto Douro', count: 303 },
+        { _id: 'Instituto Universitário da Maia - ISMAI', count: 269 },
+        { _id: 'Universidade do Porto - Faculdade de Medicina', count: 254 },
+        {
+            _id: 'Universidade Lusófona de Humanidades e Tecnologias',
+            count: 247
+        },
+        { _id: 'Universidade Aberta', count: 246 },
+        {
+            _id: 'Instituto Politécnico do Porto - Instituto Superior de Engenharia do Porto',
+            count: 235
+        },
+        {
+            _id: 'Universidade do Porto - Instituto de Ciências Biomédicas Abel Salazar',
+            count: 220
+        },
+        {
+            _id: 'Universidade Nova de Lisboa - Faculdade de Ciências Médicas',
+            count: 176
+        },
+        { _id: 'Universidade do Minho', count: 166 },
+        {
+            _id: 'Instituto Politécnico do Porto - Escola Superior de Saúde do Porto',
+            count: 165
+        }
+    ]
+
+    Também esta divido por instituição e ordenado por número de contratos.
